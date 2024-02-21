@@ -1,6 +1,27 @@
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { FaHeart } from "react-icons/fa";
+import { formatDate } from "../utils/functions.js";
 
 const LikesPages = () => {
+  const [likes, setLikes] = useState([]);
+  useEffect(() => {
+    const getLikes = async () => {
+      try {
+        const res = await fetch('/api/user/likes', {
+          credentials : 'include',
+        })
+        const data = await res.json();
+        if(data.error) throw new Error(data.error);
+
+        setLikes(data.likedBy)
+      } catch (error) {
+        toast.error(error.message)
+      }
+    }
+
+    getLikes()
+  }, [])
   return (
     <div className="relative overflow-x-auto shadow-md rounded-lg px-4">
       <table className="w-full text-sm text-left rtl:text-right overflow-hidden bg-glass">
@@ -21,10 +42,11 @@ const LikesPages = () => {
           </tr>
         </thead>
         <tbody>
-          <tr className="bg-glass border-b">
+          {likes.map((user, index) => (
+            <tr className="bg-glass border-b" key={user.username}>
             <td className="w-4 p-4">
               <div className="flex items-center">
-                <span>1</span>
+                <span>{index+1}</span>
               </div>
             </td>
             <th
@@ -33,16 +55,14 @@ const LikesPages = () => {
             >
               <img
                 className="w-10 h-10 rounded-full"
-                src={
-                  "https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745"
-                }
-                alt="Jese image"
+                src={ user.avatarUrl }
+                alt={ user.avatarUrl }
               />
               <div className="ps-3">
-                <div className="text-base font-semibold">dasdas</div>
+                <div className="text-base font-semibold">{user.username}</div>
               </div>
             </th>
-            <td className="px-6 py-4">das</td>
+            <td className="px-6 py-4">{formatDate(user.likedDate)}</td>
             <td className="px-6 py-4">
               <div className="flex items-center">
                 <FaHeart size={22} className="text-red-500 mx-2" />
@@ -50,6 +70,7 @@ const LikesPages = () => {
               </div>
             </td>
           </tr>
+          ))}
         </tbody>
       </table>
     </div>
