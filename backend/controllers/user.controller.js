@@ -16,14 +16,12 @@ export const getUserProfileAndRepos = async (req, res) => {
       authorization: `token ${process.env.GITHUB_TOKEN}`,
     },
   });
-    const repos = await reposRes.json();
-    repos.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-    // setRepos(reposList);
+  const repos = await reposRes.json();
 
-    res.status(200).json({
-        userProfile,
-        repos
-    })
+  res.status(200).json({
+      userProfile,
+      repos
+  })
   } catch (error) {
     console.log(error.message);
     res.status(500).json({
