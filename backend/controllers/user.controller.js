@@ -11,7 +11,11 @@ export const getUserProfileAndRepos = async (req, res) => {
     const userProfile = await userRes.json();
     // setUserProfile(UserProfile);
 
-    const reposRes = await fetch(userProfile.repos_url);
+  const reposRes = await fetch(userProfile.repos_url, {
+    headers: {
+      authorization: `token ${process.env.GITHUB_TOKEN}`,
+    },
+  });
     const repos = await reposRes.json();
     repos.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     // setRepos(reposList);
