@@ -1,3 +1,3 @@
 export const handleSignUpWithGithub = () => {
-    window.open('http://localhost:5000/api/auth/github', '_self')
+    window.open('https://github-mern-app-5sgf.onrender.com/api/auth/github', '_self')
 }
